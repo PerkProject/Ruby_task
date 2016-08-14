@@ -1,10 +1,12 @@
-hash = {}
+alfabet = ("a".."z").to_a
+vowels = ["a", "e", "i", "o", "u", "y"]
+vowels_index = {}
 sort_number = 0
-for letter in "a".."z"
+alfabet.each do |letter|
   sort_number += 1
-  hash[letter.to_sym] = sort_number.to_i
+  vowels_index[letter] = sort_number if vowels.include?(letter)
 end
 
-puts hash
+puts vowels_index
 
 

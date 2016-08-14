@@ -14,7 +14,5 @@ months = {
 }
 
 months.each do  |month, day|
-  if day == 30
-  puts month
-end
+ puts month if day == 30
 end
