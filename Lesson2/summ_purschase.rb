@@ -1,6 +1,6 @@
 purschase = {}
-while loop do
 order_price = 0.0
+loop do
 print "Введите название товара "
 product = gets.chomp
 break if product == "стоп" || product == "stop"
