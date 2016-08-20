@@ -71,6 +71,8 @@ attr_reader :list_stations, :list_trains, :list_carriage
     end
   end
 
+  private
+
   def create_station(station_name)
     station = Station.new(station_name)
     list_stations << station

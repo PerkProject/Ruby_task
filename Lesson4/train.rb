@@ -1,7 +1,7 @@
 class Train
   TYPE = { cargo: "грузовой", passenger: "пассажирский" }
   attr_accessor :route
-  attr_reader   :speed, :number, :next_station, :cur_station, :prev_station, :carriage_list
+  attr_reader   :speed, :number, :next_station, :cur_station, :prev_station, :carriage_list, :type
 
   def initialize (number)
     @number = number
