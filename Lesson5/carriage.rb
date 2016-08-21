@@ -1,4 +1,5 @@
 class Carriage
+  include Manufacturer
   attr_reader :carriage_number, :type
 
   def initialize(carriage_number)

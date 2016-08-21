@@ -1,9 +1,16 @@
 class Station
   attr_reader :station_name
 
+  @@stations_all = []
+
   def initialize(station_name)
     @station_name = station_name
     @trains = []
+    @@stations_all << self
+  end
+
+  def self.all
+    @@stations_all
   end
 
   def take_station_by_station_name(station_name)
@@ -32,5 +39,4 @@ class Station
     puts "Поезд уже уехал" unless @trains.include? train
     @trains.delete(train)
   end
-
 end

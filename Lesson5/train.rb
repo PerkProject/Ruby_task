@@ -1,12 +1,24 @@
 class Train
+  include Manufacturer
   TYPE = { cargo: "грузовой", passenger: "пассажирский" }
   attr_accessor :route
   attr_reader   :speed, :number, :next_station, :cur_station, :prev_station, :carriage_list, :type
+
+  @@trains_all = []
 
   def initialize (number)
     @number = number
     @speed = 0
     @carriage_list = []
+    @@trains_all << self
+  end
+
+  def self.find(number)
+    @@trains_all.each do |train|
+      if train.number == number
+        self
+      end
+    end
   end
 
   def take_train_by_number(number)
@@ -51,43 +63,42 @@ class Train
 
 
   def go_to_next_station
-   if self.route
-    route.stations[cur_station].send_train(self)
-    @prev_station = self.cur_station
-    @cur_station += 1
-    @next_station += 1
-   if self.cur_station == self.route.stations.size - 1
-    puts "Маршрут окончен"
-   else
-    route.stations[next_station].take_train(self)
-   end
-   else
-    puts "Маршрут не построен"
-   end
+    if self.route
+      route.stations[cur_station].send_train(self)
+      @prev_station = self.cur_station
+      @cur_station += 1
+      @next_station += 1
+      if self.cur_station == self.route.stations.size - 1
+        puts "Маршрут окончен"
+      else
+        route.stations[next_station].take_train(self)
+      end
+    else
+      puts "Маршрут не построен"
+    end
   end
 
   def show_route
-   if @prev_station.nil?
+    if @prev_station.nil?
       puts ""
-   else
-    puts "Проехали станцию : #{route.stations[@prev_station].station_name}"
-   end
+    else
+      puts "Проехали станцию : #{route.stations[@prev_station].station_name}"
+    end
     puts "Текущая станция : #{route.stations[@cur_station].station_name}"
-   if @next_station <= self.route.stations.size - 1
-    puts "Следующая станция : #{route.stations[@next_station].station_name}"
-   else
-    puts "Поезд едет в депо"
-   end
+    if @next_station <= self.route.stations.size - 1
+      puts "Следующая станция : #{route.stations[@next_station].station_name}"
+    else
+      puts "Поезд едет в депо"
+    end
   end
 
-private
-#присвоение вагона идет в нутри метода
-def add_carriage!(carriage)
-  self.carriage_list << carriage
-end
-#также удаление делаем внутри метода
-def del_carriage!(carriage)
-  self.carriage_list.delete(carriage)
-end
-
+  private
+  #присвоение вагона идет в нутри метода
+  def add_carriage!(carriage)
+    self.carriage_list << carriage
+  end
+  #также удаление делаем внутри метода
+  def del_carriage!(carriage)
+    self.carriage_list.delete(carriage)
+  end
 end
