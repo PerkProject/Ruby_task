@@ -15,8 +15,7 @@ class Train
 
   def self.find(number)
     @@trains_all.each do |train|
-      if train.number == number
-        self
+        self if train.number == number
       end
     end
   end
