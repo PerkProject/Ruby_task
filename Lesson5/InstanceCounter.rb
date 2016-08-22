@@ -11,22 +11,17 @@ module InstanceCounter
 end
 
 module ClassMethods
-  @@instances = 0
-
-  def initialize
-    @@instances += 1
-  end
-  def self.instansec
-    @@instances
+  class << self
+    attr_accessor :@@instances
   end
 end
 
 module InstanceMethods
   protected
-  def register_instance
+  def self.register_instance
     @@instances +=1
   end
-  def initialize
+  def self.initialize
     puts @@instasec
   end
 end

@@ -4,20 +4,17 @@ class Train
   attr_accessor :route
   attr_reader   :speed, :number, :next_station, :cur_station, :prev_station, :carriage_list, :type
 
-  @@trains_all = []
+  @@trains_all = {}
 
   def initialize (number)
     @number = number
     @speed = 0
     @carriage_list = []
-    @@trains_all << self
+    @@trains_all[number] = self
   end
 
   def self.find(number)
-    @@trains_all.each do |train|
-        self if train.number == number
-      end
-    end
+    @@trains_all[number]
   end
 
   def take_train_by_number(number)
