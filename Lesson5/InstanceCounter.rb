@@ -17,6 +17,6 @@ end
 module InstanceMethods
   protected
   def register_instance
-    self.class.instances +=1
+    self.calss.instances ||= 0
   end
 end
