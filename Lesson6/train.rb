@@ -1,9 +1,11 @@
 class Train
   include Manufacturer
+  include Validator
   TYPE = { cargo: "грузовой", passenger: "пассажирский" }
   attr_accessor :route
   attr_reader   :speed, :number, :next_station, :cur_station, :prev_station, :carriage_list, :type
 
+  NUMBER_FORMAT = /^[а-яА-ЯёЁa-zA-Z0-9]{3}[-]?[а-яА-ЯёЁa-zA-Z0-9]{2}$/
   @@trains_all = {}
 
   def initialize (number)
@@ -11,6 +13,7 @@ class Train
     @speed = 0
     @carriage_list = []
     @@trains_all[number] = self
+    validate!
   end
 
   def self.find(number)
@@ -31,9 +34,9 @@ class Train
 
   def add_carriage(carriage)
     if self.speed.zero?
-      puts "Нельзя прицеплять вагоны на скрости"
+      #puts "Нельзя прицеплять вагоны на скрости"
     elsif carriage.type == self.type
-      puts "Типы поезда и вагона не совпадают"
+      #puts "Типы поезда и вагона не совпадают"
     else
       add_carriage!(carriage)
     end
@@ -41,9 +44,9 @@ class Train
 
   def del_carriage(carriage)
     if self.speed.zero?
-      puts "Нельзя отцеплять вагоны на скорости"
+      #puts "Нельзя отцеплять вагоны на скорости"
     elsif   @carriage_list.size.nonzero?
-      puts "У поезда #{self.number} нет такого вагона"
+      #puts "У поезда #{self.number} нет такого вагона"
     else
       del_carriage!(carriage)
     end
@@ -54,9 +57,8 @@ class Train
     @cur_station = 0
     @next_station = 1
     route.stations[cur_station].take_train(self)
-    puts "Маршрут построен"
+    #puts "Маршрут построен"
   end
-
 
   def go_to_next_station
     if self.route
@@ -97,4 +99,14 @@ class Train
   def del_carriage!(carriage)
     self.carriage_list.delete(carriage)
   end
+
+  protected
+
+  def validate!
+    raise "Название поезда не может быть пустым" if number.nil?
+    raise "Название поезда не может быть меньше 5 символов" if number.length < 5
+    raise "Указан не правильный формат для названия поезда" if number !~ NUMBER_FORMAT
+    true
+  end
+
 end

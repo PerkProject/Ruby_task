@@ -1,5 +1,5 @@
 class Program
-attr_reader :list_stations, :list_trains, :list_carriage
+  attr_reader :list_stations, :list_trains, :list_carriage
 
   def initialize
     @list_trains = []
@@ -24,17 +24,9 @@ attr_reader :list_stations, :list_trains, :list_carriage
   def features_go(feature_number)
     case feature_number
     when '1'
-      puts 'Для того чтобы создать станцию'
-      puts 'Введите название станции'
-      station_name = gets.chomp
-      create_station(station_name)
+      pre_create_station
     when '2'
-      puts 'Для того чтобы создать поезд'
-      puts 'Введите номер поезда и его тип'
-      puts 'Возможные типы: cargo/passenger'
-      train_number = gets.chomp
-      train_type = gets.chomp
-      create_train(train_type, train_number)
+      pre_create_train
     when '3'
       puts 'Для того чтобы добавить вагон к поезду'
       puts 'Введите номер поезда и номер вагона'
@@ -73,21 +65,43 @@ attr_reader :list_stations, :list_trains, :list_carriage
 
   private
 
-  def create_station(station_name)
-    station = Station.new(station_name)
-    list_stations << station
-    puts 'Done'
+  def pre_create_station
+    create_station
+  rescue StandardError => e
+    puts e
+    retry
   end
 
-  def create_train(type, number)
-    train = CargoTrain.new(number) if type == 'cargo'
-    train = PassengerTrain.new(number) if type == 'passenger'
+  def create_station
+    puts 'Для того чтобы создать станцию'
+    puts 'Введите название станции'
+    station_name = gets.chomp
+    station = Station.new(station_name)
+    list_stations << station
+    puts "Создана станция #{station_name}"
+  end
+
+  def pre_create_train
+    create_train
+  rescue StandardError => e
+    puts e
+    retry
+  end
+
+  def create_train
+    puts 'Для того чтобы создать поезд'
+    puts 'Введите номер поезда и его тип'
+    puts 'Возможные типы: cargo/passenger'
+    train_number = gets.chomp
+    type = gets.chomp
+    train = CargoTrain.new(train_number) if type == 'cargo'
+    train = PassengerTrain.new(train_number) if type == 'passenger'
     list_trains << train
-    puts 'Done'
+    puts "Создан поезд под номером #{train_number} с типом #{type}"
   end
 
   def carriage_to_train(train_number, carriage_number)
-     list_trains.each do |train|
+    list_trains.each do |train|
       unless train.take_train_by_number(train_number).nil?
         if train.type == "cargo"
           carriage = CargoCarriage.new(carriage_number)
@@ -97,14 +111,14 @@ attr_reader :list_stations, :list_trains, :list_carriage
         train.add_carriage(carriage)
         list_carriage << carriage
       end
-      puts 'Done'
     end
+    puts "Вагон #{carriage_number} прицеплен к поезду #{train_number}"
   end
 
   def carriage_out_train(train_number, carriage_number)
-     list_trains.each do |train|
+    list_trains.each do |train|
       unless train.take_train_by_number(train_number).nil?
-         list_carriage.each do |carriage|
+        list_carriage.each do |carriage|
           unless carriage.take_carriage_by_number(carriage_number).nil?
             train.del_carriage(carriage)
             list_carriage.delete(carriage)
@@ -112,28 +126,30 @@ attr_reader :list_stations, :list_trains, :list_carriage
         end
       end
     end
+    puts "Вагон под номером #{carriage_number} отцеплен от поезда #{train_number}"
   end
 
   def insert_train_to_station(train_number, station_name)
-     list_stations.each do |station|
+    list_stations.each do |station|
       unless station.take_station_by_station_name(station_name).nil?
-         list_trains.each do |train|
+        list_trains.each do |train|
           unless train.take_train_by_number(train_number).nil?
             station.take_train(train)
           end
         end
       end
     end
+    puts "Поезд под номером #{train_number} помещен на станцию #{station_name}"
   end
 
   def show_stations_list
-     list_stations.each do |station|
+    list_stations.each do |station|
       puts "#{station.station_name}"
     end
   end
 
   def show_trains_by_stations(station_name)
-     list_stations.each do |station|
+    list_stations.each do |station|
       unless station.take_station_by_station_name(station_name).nil?
         station.show_trains
       end
@@ -141,7 +157,7 @@ attr_reader :list_stations, :list_trains, :list_carriage
   end
   def show_carriage
     list_carriage.each do |carriage|
-    puts "#{carriage.carriage_number}"
+      puts "#{carriage.carriage_number}"
     end
   end
 end
