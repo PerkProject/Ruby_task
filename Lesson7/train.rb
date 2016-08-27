@@ -16,6 +16,10 @@ class Train
     validate!
   end
 
+  def take_block(&block)
+    @carriage_list.each_with_index {|i, carriage| block.call(i, carriage)}
+  end
+
   def self.find(number)
     @@trains_all[number]
   end
@@ -33,23 +37,15 @@ class Train
   end
 
   def add_carriage(carriage)
-    if self.speed.zero?
-      #puts "Нельзя прицеплять вагоны на скрости"
-    elsif carriage.type == self.type
-      #puts "Типы поезда и вагона не совпадают"
-    else
-      add_carriage!(carriage)
-    end
+    #puts "Нельзя прицеплять вагоны на скрости"
+    #puts "Типы поезда и вагона не совпадают"
+    add_carriage!(carriage) unless self.speed.zero? && carriage.type == self.type
   end
 
   def del_carriage(carriage)
-    if self.speed.zero?
-      #puts "Нельзя отцеплять вагоны на скорости"
-    elsif   @carriage_list.size.nonzero?
-      #puts "У поезда #{self.number} нет такого вагона"
-    else
-      del_carriage!(carriage)
-    end
+    #puts "Нельзя отцеплять вагоны на скорости"
+    #puts "У поезда #{self.number} нет такого вагона"
+    del_carriage!(carriage) unless self.speed.zero? && @carriage_list.size.nonzero?
   end
 
   def take_route(route)
@@ -108,5 +104,4 @@ class Train
     raise "Указан не правильный формат для названия поезда" if number !~ NUMBER_FORMAT
     true
   end
-
 end

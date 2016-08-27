@@ -10,13 +10,14 @@ class Program
   def program_features
     puts '1 - Создавать станции'
     puts '2 - Создавать поезда'
-    puts '3 - Добавлять вагоны к поезду'
-    puts '4 - Отцеплять вагоны от поезда'
-    puts '5 - Помещать поезда на станцию'
-    puts '6 - Посмотреть список станций'
-    puts '7 - Посмотреть список поездов на станции'
-    puts '8 - Список вагонов'
-    puts '9 - выход из программы'
+    puts '3 - Создавать вагоны'
+    puts '4 - Добавлять вагоны к поезду'
+    puts '5 - Отцеплять вагоны от поезда'
+    puts '6 - Помещать поезда на станцию'
+    puts '7 - Посмотреть список станций'
+    puts '8 - Посмотреть список поездов на станции'
+    puts '9 - Список вагонов'
+    puts '0 - выход из программы'
     puts ' '
     puts 'Введите цифру для того чтобы выбрать действие'
   end
@@ -28,34 +29,37 @@ class Program
     when '2'
       pre_create_train
     when '3'
+      pre_create_carriage
+    when '4'
       puts 'Для того чтобы добавить вагон к поезду'
       puts 'Введите номер поезда и номер вагона'
       train_number = gets.chomp
       carriage_number = gets.chomp
       carriage_to_train(train_number, carriage_number)
-    when '4'
+    when '5'
       puts 'Для того чтобы отцепить вагон от поезда'
       puts 'Введите номер поезда и номер вагона'
       train_number = gets.chomp
       carriage_number = gets.chomp
       carriage_out_train(train_number, carriage_number)
-    when '5'
+    when '6'
       puts 'Для того чтобы поместить поезд на станцию'
       puts 'Введите номер поезда и название станции'
       train_number = gets.chomp
       station_name = gets.chomp
       insert_train_to_station(train_number, station_name)
-    when '6'
+    when '7'
       puts 'Список станций: '
       show_stations_list
-    when '7'
+    when '8'
       puts 'Введите название станции'
       station_name = gets.chomp
       show_trains_by_stations(station_name)
-    when '8'
-      puts 'Список вагонов: '
-      show_carriage
     when '9'
+      puts 'Введите номер поезда'
+      train_number = gets.chomp
+      show_carriage_by_train(train_number)
+    when '0'
       puts 'Счастливого пути'
       exit
     else
@@ -91,25 +95,58 @@ class Program
   def create_train
     puts 'Для того чтобы создать поезд'
     puts 'Введите номер поезда и его тип'
-    puts 'Возможные типы: cargo/passenger'
+    puts 'Возможные типы: 1 - cargo / 2 - passenger'
     train_number = gets.chomp
     type = gets.chomp
-    train = CargoTrain.new(train_number) if type == 'cargo'
-    train = PassengerTrain.new(train_number) if type == 'passenger'
+    train = CargoTrain.new(train_number) if type == 'cargo' || type == 1
+    train = PassengerTrain.new(train_number) if type == 'passenger' || type == 2
     list_trains << train
     puts "Создан поезд под номером #{train_number} с типом #{type}"
+  end
+
+  def pre_create_carriage
+    puts 'Для того чтобы создать вагон'
+    puts 'Введите его номер'
+    carriage_number = gets.chomp
+    puts 'Укажите тип вагона'
+    puts '1 - пассажирский, 2 - грузовой'
+    carriage_type = gets.chomp
+    create_carriage(carriage_number, carriage_type)
+  rescue StandardError => e
+    puts e
+    retry
+  end
+
+  def create_carriage(carriage_number, carriage_type)
+    if carriage_type.to_i == 1
+      puts 'Для создания пассажирского вагона укажите количество мест'
+      place_qty = gets.chomp
+      carriage = PassengerCarriage.new(carriage_number,place_qty)
+    else
+      puts 'Для создания грузового вагона укажите его объем'
+      capacity_all = gets.chomp
+      carriage = CargoCarriage.new(carriage_number,capacity_all)
+    end
+    list_carriage << carriage
+    puts "Вагон под номером #{carriage_number} создан"
   end
 
   def carriage_to_train(train_number, carriage_number)
     list_trains.each do |train|
       unless train.take_train_by_number(train_number).nil?
-        if train.type == "cargo"
-          carriage = CargoCarriage.new(carriage_number)
-        else
-          carriage = PassengerCarriage.new(carriage_number)
+        list_carriage.each do |carriage|
+          unless carriage.take_carriage_by_number(carriage_number).nil?
+            if train.type == "cargo" && carriage.type == "cargo"
+              train.add_carriage(carriage)
+              list_carriage << carriage
+            elsif train.type == "passenger" && carriage.type == "passenger"
+              train.add_carriage(carriage)
+              list_carriage << carriage
+            else
+              puts "Нельзя сцепить разные типы вагона и поезда"
+            end
+          end
         end
-        train.add_carriage(carriage)
-        list_carriage << carriage
       end
     end
     puts "Вагон #{carriage_number} прицеплен к поезду #{train_number}"
@@ -155,9 +192,12 @@ class Program
       end
     end
   end
-  def show_carriage
-    list_carriage.each do |carriage|
-      puts "#{carriage.carriage_number}"
+  def show_carriage_by_train(train_number)
+    list_trains.each do |train|
+      unless train.take_train_by_number(train_number).nil?
+        proc = Proc.new{puts "#{train_number} #{carriage.type} #{carriage.busy_place_qty} #{carriage.show_free_place}"}
+        train.take_block(proc.call)
+      end
     end
   end
 end

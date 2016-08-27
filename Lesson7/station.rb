@@ -13,6 +13,14 @@ class Station
     validate!
   end
 
+  def take_block
+    if block_given?
+      @trains.each do |train|
+        yeild(train)
+      end
+    end
+  end
+
   def self.all
     @@stations_all
   end
