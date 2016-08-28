@@ -35,7 +35,7 @@ class Station
 
   def show_trains
     @trains.each do |train|
-      puts train.number
+      puts "#Номер: {train.number} тип поезда: #{train.type} количество вагонов: #{train.carriage_list.size}"
     end
   end
 

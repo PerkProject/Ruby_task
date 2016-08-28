@@ -16,7 +16,8 @@ class Program
     puts '6 - Помещать поезда на станцию'
     puts '7 - Посмотреть список станций'
     puts '8 - Посмотреть список поездов на станции'
-    puts '9 - Список вагонов'
+    puts '9 - Список вагонов поезда'
+    puts '10 - Занимать место в вагоне'
     puts '0 - выход из программы'
     puts ' '
     puts 'Введите цифру для того чтобы выбрать действие'
@@ -59,6 +60,10 @@ class Program
       puts 'Введите номер поезда'
       train_number = gets.chomp
       show_carriage_by_train(train_number)
+    when '10'
+      puts 'Укажите номер вагона'
+      carriage_number = gets.chomp
+      fill_carriage(carriage_number)
     when '0'
       puts 'Счастливого пути'
       exit
@@ -98,10 +103,10 @@ class Program
     puts 'Возможные типы: 1 - cargo / 2 - passenger'
     train_number = gets.chomp
     type = gets.chomp
-    train = CargoTrain.new(train_number) if type == 'cargo' || type == 1
-    train = PassengerTrain.new(train_number) if type == 'passenger' || type == 2
+    train = CargoTrain.new(train_number) if type == '1'
+    train = PassengerTrain.new(train_number) if type == '2'
     list_trains << train
-    puts "Создан поезд под номером #{train_number} с типом #{type}"
+    puts "Создан поезд под номером #{train_number} с типом #{train.type}"
   end
 
   def pre_create_carriage
@@ -136,15 +141,7 @@ class Program
       unless train.take_train_by_number(train_number).nil?
         list_carriage.each do |carriage|
           unless carriage.take_carriage_by_number(carriage_number).nil?
-            if train.type == "cargo" && carriage.type == "cargo"
-              train.add_carriage(carriage)
-              list_carriage << carriage
-            elsif train.type == "passenger" && carriage.type == "passenger"
-              train.add_carriage(carriage)
-              list_carriage << carriage
-            else
-              puts "Нельзя сцепить разные типы вагона и поезда"
-            end
+            train.add_carriage(carriage)
           end
         end
       end
@@ -158,7 +155,6 @@ class Program
         list_carriage.each do |carriage|
           unless carriage.take_carriage_by_number(carriage_number).nil?
             train.del_carriage(carriage)
-            list_carriage.delete(carriage)
           end
         end
       end
@@ -192,11 +188,33 @@ class Program
       end
     end
   end
+
   def show_carriage_by_train(train_number)
+    carriage_info = lambda do |carriage, i|
+      if carriage.type == :cargo
+        puts "#{i + 1}. #{carriage.carriage_number}. #{carriage.type}. #{carriage.show_free_capacity}"
+      else
+        puts "#{i + 1}. #{carriage.carriage_number}. #{carriage.type}. #{carriage.show_free_place}"
+      end
+    end
     list_trains.each do |train|
       unless train.take_train_by_number(train_number).nil?
-        proc = Proc.new{puts "#{train_number} #{carriage.type} #{carriage.busy_place_qty} #{carriage.show_free_place}"}
-        train.take_block(proc.call)
+        train.take_block(carriage_info)
+      end
+    end
+  end
+
+  def fill_carriage(carriage_number)
+    list_carriage.each do |carriage|
+      unless carriage.take_carriage_by_number(carriage_number).nil?
+        if carriage.type == :cargo
+          puts 'Вагон грузовой'
+          puts 'Укажите объем'
+          capacity = gets.chomp
+          carriage.fill_capacity(capacity)
+        else
+          carriage.add_place
+        end
       end
     end
   end

@@ -16,8 +16,8 @@ class Train
     validate!
   end
 
-  def take_block(&block)
-    @carriage_list.each_with_index {|i, carriage| block.call(i, carriage)}
+  def take_block(block)
+    @carriage_list.each_with_index(&block)
   end
 
   def self.find(number)
