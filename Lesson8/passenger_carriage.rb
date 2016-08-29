@@ -1,7 +1,7 @@
 class PassengerCarriage < Carriage
   attr_reader :busy_place_qty
 
-  def initialize (carriage_number, place_qty)
+  def initialize(carriage_number, place_qty)
     @carriage_number = carriage_number
     super(carriage_number)
     @type = :passenger

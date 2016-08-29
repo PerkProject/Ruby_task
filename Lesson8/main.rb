@@ -14,7 +14,8 @@ program = Program.new
 puts 'Добро пожаловать в эмулятор железной дороги!'
 
 loop do
-  program.program_features
+  program.program_features_part_one
+  program.program_features_part_two
   feature_number = gets.chomp
   program.features_go(feature_number)
 end

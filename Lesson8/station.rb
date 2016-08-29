@@ -4,7 +4,7 @@ class Station
 
   NUMBER_FORMAT = /^[а-яА-ЯёЁa-zA-Z0-9]+$/
 
-  @@stations_all = []
+  @stations_all = []
 
   def initialize(station_name)
     @station_name = station_name
@@ -14,10 +14,8 @@ class Station
   end
 
   def take_block
-    if block_given?
-      @trains.each do |train|
-        yeild(train)
-      end
+    @trains.each do |train|
+      yeild(train)
     end
   end
 
@@ -35,7 +33,9 @@ class Station
 
   def show_trains
     @trains.each do |train|
-      puts "#Номер: {train.number} тип поезда: #{train.type} количество вагонов: #{train.carriage_list.size}"
+      puts "Номер: #{train.number}"
+      puts "тип поезда: #{train.type}"
+      puts "количество вагонов: #{train.carriage_list.size}"
     end
   end
 
@@ -48,16 +48,16 @@ class Station
   end
 
   def send_train(train)
-    puts "Поезд уже уехал" unless @trains.include? train
+    puts 'Поезд уже уехал' unless @trains.include? train
     @trains.delete(train)
   end
 
   protected
 
   def validate!
-    raise "Название станции не может быть пустым" if station_name.nil?
-    raise "Название станции не может быть меньше 4 символов" if station_name.length < 4
-    raise "Название станции не соотвествует формату" if station_name !~ NUMBER_FORMAT
+    raise 'Название станции не может быть пустым' if station_name.nil?
+    raise 'Название меньше 4 символов' if station_name.length < 4
+    raise 'Название не соотвествует формату' if station_name !~ NUMBER_FORMAT
     true
   end
 end

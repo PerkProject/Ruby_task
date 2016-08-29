@@ -17,9 +17,9 @@ class Carriage
   protected
 
   def validate!
-    raise "Название вагона не может быть пустым" if carriage_number.nil?
-    raise "Название вагона должно содержать не меньше 6 символов" if carriage_number.length < 6
-    raise "Использован неправильный формат" if carriage_number !~ NUMBER_FORMAT
+    raise 'Название вагона не может быть пустым' if carriage_number.nil?
+    raise 'Название вагона меньше 6 символов' if carriage_number.length < 6
+    raise 'Использован неправильный формат' if carriage_number !~ NUMBER_FORMAT
     true
   end
 end

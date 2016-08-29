@@ -1,7 +1,7 @@
 class Route
   include Validator
   attr_reader :stations
-  def initialize (start_station, finish_station)
+  def initialize(start_station, finish_station)
     @stations = []
     @stations << start_station << finish_station
     validate!
@@ -16,15 +16,24 @@ class Route
   end
 
   def stations_list
-    index = 0
-    @stations.each_with_index  {|station, index| puts "#{station.station_name} #{index + 1}" }
+    @stations.each_with_index do |station, index|
+      puts "#{station.station_name} #{index + 1}"
+    end
   end
 
   protected
 
   def validate!
-    raise "Начальная станция не создана" unless Station.all.include?(start_station)
-    raise "Конечная станция не создана" unless Station.all.include?(finish_station)
+    raise 'Начальная станция не создана' unless check_start_station
+    raise 'Конечная станция не создана' unless check_finish_station
     true
+  end
+
+  def check_start_station
+    Station.all.include?(start_station)
+  end
+
+  def check_finish_station
+    Station.all.include?(finish_station)
   end
 end

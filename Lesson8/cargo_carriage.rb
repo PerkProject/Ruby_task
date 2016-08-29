@@ -10,7 +10,9 @@ class CargoCarriage < Carriage
   end
 
   def fill_capacity(capacity)
-    @capacity_cur += capacity.to_f if @capacity_cur += capacity.to_f < @capacity_all
+    if @capacity_cur += capacity.to_f < @capacity_all
+      @capacity_cur += capacity.to_f
+    end
   end
 
   def show_free_capacity

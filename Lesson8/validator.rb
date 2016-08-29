@@ -1,7 +1,6 @@
 module Validator
-
   def valid?
-    self.validate!
+    validate!
   rescue
     false
   end

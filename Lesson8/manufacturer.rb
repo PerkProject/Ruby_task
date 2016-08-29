@@ -12,9 +12,9 @@ module Manufacturer
   protected
 
   def validate!
-    raise "Название не может быть пустым" if name.nil?
-    raise "Название должно содержать не меньше 6 символов" if name.length < 6
-    raise "Неправильный формат названия" if name !~ NUMBER_FORMAT
+    raise 'Название не может быть пустым' if name.nil?
+    raise 'Название должно содержать не меньше 6 символов' if name.length < 6
+    raise 'Неправильный формат названия' if name !~ NUMBER_FORMAT
     true
   end
 end
