@@ -1,5 +1,7 @@
 class Station
   include Validator
+  include Accessors
+  include Validation
   attr_reader :station_name
 
   NUMBER_FORMAT = /^[а-яА-ЯёЁa-zA-Z0-9]+$/
@@ -52,12 +54,12 @@ class Station
     @trains.delete(train)
   end
 
-  protected
+  #protected
 
-  def validate!
-    raise 'Название станции не может быть пустым' if station_name.nil?
-    raise 'Название меньше 4 символов' if station_name.length < 4
-    raise 'Название не соотвествует формату' if station_name !~ NUMBER_FORMAT
-    true
-  end
+  #def validate!
+  #  raise 'Название станции не может быть пустым' if station_name.nil?
+  #  raise 'Название меньше 4 символов' if station_name.length < 4
+  #  raise 'Название не соотвествует формату' if station_name !~ NUMBER_FORMAT
+  #  true
+  #end
 end

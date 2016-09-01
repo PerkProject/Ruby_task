@@ -1,5 +1,7 @@
 class Train
   include Manufacturer
+  include Accessors
+  include Validation
   include Validator
   TYPE = { cargo: 'грузовой', passenger: 'пассажирский' }.freeze
   attr_accessor :route
@@ -107,12 +109,12 @@ class Train
     carriage_list.delete(carriage)
   end
 
-  protected
+  #protected
 
-  def validate!
-    raise 'Название поезда не может быть пустым' if number.nil?
-    raise 'Название поезда не может быть меньше 5 символов' if number.length < 5
-    raise 'Указан не правильный формат' if number !~ NUMBER_FORMAT
-    true
-  end
+  #def validate!
+  #  raise 'Название поезда не может быть пустым' if number.nil?
+  #  raise 'Название поезда не может быть меньше 5 символов' if number.length < 5
+  #  raise 'Указан не правильный формат' if number !~ NUMBER_FORMAT
+  #  true
+  #end
 end
