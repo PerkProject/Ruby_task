@@ -13,7 +13,7 @@ module Accessors
           if @history[attribute_name]
             @history[attribute_name] << value
           else
-            @history[attribute_name] = value
+            @history[attribute_name] = [value]
           end
         end
         define_method("#{attribute}_history") { instance_variable_get @history[attribute_name] }
