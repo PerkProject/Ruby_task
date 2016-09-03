@@ -2,12 +2,13 @@ class Train
   include Manufacturer
   include Accessors
   include Validation
-  include Validator
   TYPE = { cargo: 'грузовой', passenger: 'пассажирский' }.freeze
   attr_accessor :route
   attr_reader   :speed, :number, :next_station, :cur_station
   attr_reader   :prev_station, :carriage_list, :type
   NUMBER_FORMAT = /^[а-яА-ЯёЁa-zA-Z0-9]{3}[-]?[а-яА-ЯёЁa-zA-Z0-9]{2}$/
+  validate :number, :presence
+  validate :number, :format, NUMBER_FORMAT
   @trains_all = {}
 
   def initialize(number)
@@ -23,7 +24,7 @@ class Train
   end
 
   def self.find(number)
-    @@trains_all[number]
+    @trains_all[number]
   end
 
   def take_train_by_number(number)
@@ -108,13 +109,4 @@ class Train
   def del_carriage!(carriage)
     carriage_list.delete(carriage)
   end
-
-  #protected
-
-  #def validate!
-  #  raise 'Название поезда не может быть пустым' if number.nil?
-  #  raise 'Название поезда не может быть меньше 5 символов' if number.length < 5
-  #  raise 'Указан не правильный формат' if number !~ NUMBER_FORMAT
-  #  true
-  #end
 end

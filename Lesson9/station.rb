@@ -1,11 +1,11 @@
 class Station
-  include Validator
-  include Accessors
   include Validation
+  include Accessors
   attr_reader :station_name
 
   NUMBER_FORMAT = /^[а-яА-ЯёЁa-zA-Z0-9]+$/
-
+  validate :station_name, :presence
+  validate :station_name, :format, NUMBER_FORMAT
   @stations_all = []
 
   def initialize(station_name)
@@ -22,7 +22,7 @@ class Station
   end
 
   def self.all
-    @@stations_all
+    @stations_all
   end
 
   def take_station_by_station_name(station_name)
@@ -53,13 +53,4 @@ class Station
     puts 'Поезд уже уехал' unless @trains.include? train
     @trains.delete(train)
   end
-
-  #protected
-
-  #def validate!
-  #  raise 'Название станции не может быть пустым' if station_name.nil?
-  #  raise 'Название меньше 4 символов' if station_name.length < 4
-  #  raise 'Название не соотвествует формату' if station_name !~ NUMBER_FORMAT
-  #  true
-  #end
 end

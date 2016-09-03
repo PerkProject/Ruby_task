@@ -133,7 +133,6 @@ class Program
     puts 'Введите номер поезда и его тип'
     puts 'Возможные типы: 1 - cargo / 2 - passenger'
     create_train_by_type
-    puts "Создан поезд под номером #{train_number} с типом #{train.type}"
   end
 
   def create_train_by_type
@@ -142,6 +141,7 @@ class Program
     train = CargoTrain.new(train_number) if type == '1'
     train = PassengerTrain.new(train_number) if type == '2'
     list_trains << train
+    puts "Создан поезд под номером #{train_number} с типом #{train.type}"
   end
 
   def pre_create_carriage
